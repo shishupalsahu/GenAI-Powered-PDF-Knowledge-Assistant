@@ -3,4 +3,5 @@ langchain
 langchain-google-genai
 faiss-cpu
 pypdf
+langchain-community
 python-dotenv
