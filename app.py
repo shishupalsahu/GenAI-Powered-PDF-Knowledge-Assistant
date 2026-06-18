@@ -14,6 +14,10 @@ st.set_page_config(
 st.title("📚 GenAI-Powered PDF Knowledge Assistant")
 st.write("Upload a PDF document and ask questions instantly using Google Gemini & RAG!")
 
+# Chat History Initialize
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 # Sidebar
 with st.sidebar:
     st.header("1. Document Ingestion")
@@ -42,15 +46,28 @@ with st.sidebar:
                 if os.path.exists("temp.pdf"):
                     os.remove("temp.pdf")
 
-
 # Chat Section
-st.header("2. Chat with your Document")
+# st.header("2. Chat with your Document")
 
-user_question = st.text_input(
-    "Ask a question from the uploaded PDF:"
-)
+# Show Previous Chat
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+user_question = st.chat_input("Ask a question from the uploaded PDF")
 
 if user_question:
+
+    # Save User Message
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": user_question
+        }
+    )
+
+    with st.chat_message("user"):
+        st.markdown(user_question)
 
     vector_store = load_vector_store()
 
@@ -92,8 +109,18 @@ Instructions:
                 [HumanMessage(content=prompt)]
             )
 
-        st.subheader("Answer:")
-        st.write(response.content)
+        answer = response.content
+
+        # Save Assistant Response
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": answer
+            }
+        )
+
+        with st.chat_message("assistant"):
+            st.markdown(answer)
 
     else:
         st.warning(
