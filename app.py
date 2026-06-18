@@ -11,8 +11,9 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📚 GenAI-Powered PDF Knowledge Assistant")
-st.write("Upload a PDF document and ask questions instantly using Google Gemini & RAG!")
+st.title("🧠 BrainPDF")
+st.subheader("Your Intelligent PDF Chat Assistant")
+st.write("Upload any document and get instant answers powered by RAG.")
 
 # Chat History Initialize
 if "messages" not in st.session_state:
